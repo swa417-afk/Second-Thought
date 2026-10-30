@@ -15,6 +15,22 @@ fail 0
 
 The focused suite covers deterministic typed control actions, runner argument parsing, trigger-to-policy routing, semantic outcome scoring, mechanism verdicts, and deterministic detector behavior.
 
+Additional fresh checks on the same submission working tree:
+
+```text
+npm run evidence:test
+tests 33
+pass 33
+fail 0
+
+npm run pressure:v2:test
+tests 22
+pass 22
+fail 0
+```
+
+Across these three focused suites, **77 tests passed and 0 failed**.
+
 ## TypeScript compiler note
 
 A full `tsc --noEmit` attempt on the submission laptop did not produce TypeScript diagnostics; the Node process terminated with a V8 allocation/out-of-memory error, including after a 4 GB heap allowance. This is recorded as an environment/runtime limitation, not reported as a successful typecheck.
