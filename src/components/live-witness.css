@@ -1,0 +1,292 @@
+.live-witness {
+  --live-foreground: #f7f9fa;
+  --live-muted: #a7a8ae;
+  --live-rule: rgba(247, 249, 250, 0.16);
+  --live-signal: #af50ff;
+  background: #090909;
+  color: var(--live-foreground);
+  font-family: "Substrate Inter", Arial, sans-serif;
+  padding: clamp(48px, 6vw, 96px) clamp(24px, 6vw, 90px);
+  border-block: 1px solid var(--live-rule);
+  scroll-margin-top: 112px;
+}
+.live-witness > * {
+  max-width: 1200px;
+  margin-inline: auto;
+}
+.live-witness-header {
+  display: grid;
+  grid-template-columns: minmax(0, 1.65fr) minmax(260px, 0.65fr);
+  align-items: end;
+  gap: clamp(28px, 4vw, 64px);
+}
+.live-witness-kicker,
+.live-stage-num,
+.live-witness-indicator {
+  font-family: "Substrate Mono", monospace;
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  line-height: 1.5;
+  text-transform: uppercase;
+}
+.live-witness-kicker,
+.live-stage-num {
+  display: block;
+  color: #f0f0f0;
+}
+.live-witness h2 {
+  font-size: clamp(32px, 4.3vw, 62px);
+  line-height: 1.1;
+  font-weight: 300;
+  letter-spacing: -0.035em;
+  max-width: 840px;
+  margin: 16px 0 24px;
+  text-wrap: balance;
+}
+.live-witness h2 em {
+  font-family: "Substrate Lora", Georgia, serif;
+  font-weight: 400;
+  color: inherit;
+}
+.live-witness-intro {
+  max-width: 690px;
+  color: var(--live-muted);
+  line-height: 1.65;
+  font-size: 15px;
+  text-wrap: pretty;
+}
+.live-witness-control {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: stretch;
+}
+.live-witness-indicator {
+  align-self: flex-start;
+  border: 1px solid var(--live-rule);
+  border-radius: 6px;
+  color: var(--live-foreground);
+  padding: 8px 12px;
+  font-size: 10px;
+}
+.live-witness-indicator[data-ready="false"],
+.live-witness-indicator[data-ready="null"] {
+  color: var(--live-muted);
+}
+.live-witness-launch {
+  min-height: 56px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 11px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: var(--live-signal);
+  color: #090909;
+  padding: 14px 20px;
+  font-weight: 600;
+  font-size: 15px;
+  cursor: pointer;
+}
+.live-witness .live-witness-launch:hover:not(:disabled) {
+  background: var(--live-signal);
+  color: #090909;
+  filter: brightness(1.08);
+}
+.live-witness .live-witness-launch:disabled {
+  background: #1b1b1e;
+  color: var(--live-muted);
+  border-color: var(--live-rule);
+  opacity: 1;
+  cursor: not-allowed;
+}
+.live-witness button:focus-visible {
+  outline: 2px solid #e1bdff;
+  outline-offset: 4px;
+}
+.live-witness-control small {
+  color: var(--live-muted);
+  font-size: 12px;
+  line-height: 1.6;
+}
+.live-witness-spinner {
+  animation: live-witness-spin 1s linear infinite;
+}
+@keyframes live-witness-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.live-witness-stages {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 24px minmax(0, 1fr) 24px minmax(0, 1fr);
+  gap: 16px;
+  margin-top: 40px;
+  align-items: stretch;
+}
+.live-witness-stage {
+  padding: 28px 24px;
+  min-height: 232px;
+  min-width: 0;
+  border: 1px solid var(--live-rule);
+  border-radius: 19.2px;
+  background: rgba(247, 249, 250, 0.025);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.live-witness-stage strong {
+  font-size: clamp(20px, 2vw, 25px);
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+}
+.live-witness-stage p {
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--live-muted);
+}
+.live-witness-stage small {
+  font-family: "Substrate Mono", monospace;
+  font-size: 11px;
+  color: var(--live-muted);
+  line-height: 1.6;
+  margin-top: auto;
+  overflow-wrap: anywhere;
+}
+.live-witness-intervention {
+  background: rgba(247, 249, 250, 0.055);
+  border-color: rgba(247, 249, 250, 0.32);
+}
+.live-witness-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--live-muted);
+}
+.live-witness-verdict {
+  display: grid;
+  grid-template-columns: 50px minmax(0, 1fr) auto;
+  gap: 24px;
+  align-items: center;
+  border-block: 1px solid var(--live-rule);
+  padding: 28px 0;
+  margin-top: 32px;
+}
+.live-witness-verdict-mark {
+  border: 1px solid rgba(247, 249, 250, 0.32);
+  border-radius: 8px;
+  color: var(--live-foreground);
+  width: 49px;
+  height: 49px;
+  display: grid;
+  place-items: center;
+}
+.live-witness-verdict h3 {
+  font-size: clamp(24px, 2.3vw, 36px);
+  line-height: 1.2;
+  font-weight: 400;
+  letter-spacing: -0.025em;
+  margin: 8px 0;
+  text-wrap: balance;
+}
+.live-witness-verdict p,
+.live-witness-verdict small {
+  color: var(--live-muted);
+  font-size: 13px;
+  line-height: 1.65;
+}
+.live-witness-verdict small {
+  display: block;
+  margin-top: 12px;
+  overflow-wrap: anywhere;
+}
+.live-witness-copy {
+  min-height: 44px;
+  border: 1px solid rgba(247, 249, 250, 0.32);
+  border-radius: 8px;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.live-witness-copy:hover {
+  background: rgba(247, 249, 250, 0.08);
+}
+.live-witness-failure {
+  color: #ffb3ae;
+  padding: 20px 24px;
+  border: 1px solid rgba(223, 121, 113, 0.4);
+  border-radius: 8px;
+  background: #2b1b20;
+  margin-top: 28px;
+  overflow-wrap: anywhere;
+}
+.live-witness-disclosure {
+  color: var(--live-muted);
+  font-size: 12px;
+  line-height: 1.7;
+  margin-top: 24px;
+  text-wrap: pretty;
+}
+.live-witness-restore {
+  min-height: 44px;
+  cursor: pointer;
+  align-self: flex-start;
+  font-size: 13px;
+  color: var(--live-foreground);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.live-witness-restore:hover {
+  color: #e1bdff;
+}
+@media (max-width: 900px) {
+  .live-witness-header {
+    grid-template-columns: 1fr;
+  }
+  .live-witness-control {
+    align-items: stretch;
+  }
+  .live-witness-launch {
+    width: 100%;
+  }
+  .live-witness-stages {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+  .live-witness-stage {
+    min-height: 170px;
+    padding: 24px;
+  }
+  .live-witness-arrow {
+    transform: rotate(90deg);
+    height: 44px;
+  }
+  .live-witness-verdict {
+    grid-template-columns: 46px minmax(0, 1fr);
+    gap: 20px;
+  }
+  .live-witness-copy {
+    grid-column: 1 / -1;
+    justify-content: center;
+  }
+}
+@media (max-width: 640px) {
+  .live-witness {
+    scroll-margin-top: 132px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .live-witness-spinner {
+    animation: none;
+  }
+  .live-witness button {
+    transition: none;
+  }
+}
