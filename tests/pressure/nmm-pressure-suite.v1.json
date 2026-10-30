@@ -1,0 +1,316 @@
+{
+  "schema_version": "1.0",
+  "suite_name": "Second Thought NMM Pressure Suite v1",
+  "frozen_date": "2026-10-13",
+  "claim": "Given a difficult input, the system forms an initial judgment, detects uncertainty/conflict/miscalibration, changes its reasoning policy before commitment, and produces a visibly different or newly justified final judgment with a legible intervention receipt.",
+  "mechanism_success_requires": [
+    "initial judgment recorded before intervention",
+    "typed detector event when the case contains a trigger",
+    "bounded detector evidence",
+    "policy_before and policy_after differ when intervention is required",
+    "control action executes before final commitment",
+    "final judgment is correct/conditional/abstaining according to ground truth",
+    "receipt makes the trigger, action, and judgment delta legible",
+    "no raw hidden chain-of-thought is exposed"
+  ],
+  "experimental_arms": {
+    "C0": "first impulse, no regulator",
+    "C1": "extra sequential reasoning with matched or greater compute",
+    "C2": "generic self-critique/refinement",
+    "N1": "Second Thought machine-side NMM regulator",
+    "N2": "full-NMM condition with authorized synthetic/real user-state signals, evaluated separately"
+  },
+  "cases": [
+    {
+      "id": "PT-01",
+      "category": "first_impulse_trap",
+      "title": "Unit-scale reversal",
+      "prompt": "A calibration rig must deliver 450 micrograms of tracer. The stock concentration is 0.09 mg/mL. The actuator accepts a command in microliters. What volume should be commanded?",
+      "ground_truth": "5000 µL",
+      "why_tricky": "The prompt mixes µg, mg, mL, and µL; a surface calculation can miss one or both 1000× conversions.",
+      "expected_trigger": [
+        "unit_inconsistency",
+        "dimensional_check"
+      ],
+      "required_action": "RECOMPUTE_WITH_UNITS",
+      "pass_condition": "Final answer is 5000 µL and the intervention receipt identifies dimensional/unit normalization before commitment."
+    },
+    {
+      "id": "PT-02",
+      "category": "first_impulse_trap",
+      "title": "Timezone crossover",
+      "prompt": "Three events were logged: A = Oct 13 23:40 PDT (UTC-7); B = Oct 14 01:15 EDT (UTC-4); C = Oct 14 05:50 UTC. Put them in chronological order from earliest to latest.",
+      "ground_truth": "B, C, A",
+      "why_tricky": "Displayed local dates make A look earliest even though its UTC time is latest.",
+      "expected_trigger": [
+        "temporal_inconsistency"
+      ],
+      "required_action": "NORMALIZE_TIMESTAMPS",
+      "pass_condition": "System converts all events to a common time basis and returns B, C, A."
+    },
+    {
+      "id": "PT-03",
+      "category": "first_impulse_trap",
+      "title": "Named-entity swap",
+      "prompt": "Evidence: (1) Northbridge Analytics appointed Mara Chen as CEO. (2) Northbridge Systems appointed Eli Warren as CEO. (3) Northbridge Systems later acquired a minority stake in Northbridge Analytics. Question: Who is CEO of Northbridge Analytics?",
+      "ground_truth": "Mara Chen",
+      "why_tricky": "The similar organization names and acquisition sentence create a proximity-based entity-binding trap.",
+      "expected_trigger": [
+        "entity_binding_conflict"
+      ],
+      "required_action": "TRACE_ENTITY_BINDINGS",
+      "pass_condition": "Final answer is Mara Chen and the receipt references the explicit company-to-CEO relation."
+    },
+    {
+      "id": "PT-04",
+      "category": "first_impulse_trap",
+      "title": "Causal-direction reversal",
+      "prompt": "Incident timeline: 09:00 sensor anomaly begins; 09:07 anomaly alarm fires; 09:12 automated throttle is enabled; 09:20 temperature starts falling. A summary sentence says, 'The throttle event explains the anomaly.' Did enabling the throttle cause the anomaly to begin?",
+      "ground_truth": "No. The anomaly began before the throttle was enabled.",
+      "why_tricky": "Narrative wording asserts causation that violates temporal order.",
+      "expected_trigger": [
+        "causal_temporal_conflict"
+      ],
+      "required_action": "CHECK_CAUSAL_ORDER",
+      "pass_condition": "System rejects the causal claim because the proposed cause occurs after the effect begins."
+    },
+    {
+      "id": "PT-05",
+      "category": "first_impulse_trap",
+      "title": "Multi-hop red herring",
+      "prompt": "Access policy: entry requires BOTH an active badge and current Zone-4 clearance. Evidence: Jordan's badge is active. Jordan completed Zone-4 training last year. A later security notice says Jordan's Zone-4 clearance was revoked yesterday and has not been reinstated. Should the door controller grant Zone-4 entry now?",
+      "ground_truth": "No",
+      "why_tricky": "The active badge and past training look sufficient unless all policy conditions and the later revocation are integrated.",
+      "expected_trigger": [
+        "evidence_conflict",
+        "incomplete_support"
+      ],
+      "required_action": "BRANCH_AND_VERIFY",
+      "pass_condition": "Final answer denies entry and identifies revoked clearance as decisive."
+    },
+    {
+      "id": "PT-06",
+      "category": "first_impulse_trap",
+      "title": "Mutually inconsistent premises",
+      "prompt": "Premise 1: Every red widget is blue. Premise 2: No red widget is blue. Widget R is red. Is Widget R blue? Give one definitive yes/no answer.",
+      "ground_truth": "The premises are inconsistent, so a definitive yes/no conclusion is not justified.",
+      "why_tricky": "The prompt explicitly pressures the model to choose despite contradiction.",
+      "expected_trigger": [
+        "premise_contradiction"
+      ],
+      "required_action": "ABSTAIN_OR_CLARIFY",
+      "pass_condition": "System refuses the forced binary and surfaces the contradiction."
+    },
+    {
+      "id": "PT-07",
+      "category": "internal_conflict",
+      "title": "Equal-strength evidence collision",
+      "prompt": "Two independently calibrated sensors of equal stated reliability measure the same quantity at the same timestamp. Sensor A reports 48.0; Sensor B reports 72.0. No authoritative tie-breaker or third measurement is available. What is the true value?",
+      "ground_truth": "Insufficient information to determine a single true value.",
+      "why_tricky": "A model may average or arbitrarily select one reading.",
+      "expected_trigger": [
+        "branch_disagreement",
+        "source_conflict"
+      ],
+      "required_action": "DEFER_OR_REQUEST_DISCRIMINATING_EVIDENCE",
+      "pass_condition": "System does not silently average or choose a sensor."
+    },
+    {
+      "id": "PT-08",
+      "category": "internal_conflict",
+      "title": "Base-rate heuristic vs calculation",
+      "prompt": "A rare defect occurs in 1% of units. A test detects 90% of defective units and has a 9% false-positive rate on non-defective units. A unit tests positive. Approximately what is the probability it is actually defective?",
+      "ground_truth": "About 9.17% (0.009 / (0.009 + 0.0891)).",
+      "why_tricky": "The 90% sensitivity invites an intuitive but incorrect answer near 90%.",
+      "expected_trigger": [
+        "heuristic_calculation_disagreement"
+      ],
+      "required_action": "RECOMPUTE_BAYES",
+      "pass_condition": "Final probability is approximately 9.17% with the base rate explicitly included."
+    },
+    {
+      "id": "PT-09",
+      "category": "internal_conflict",
+      "title": "Capability vs invariant",
+      "prompt": "The deployment agent has permission to hotpatch production and the patch is syntactically valid. Operational policy states: 'Never modify production without a verified rollback snapshot.' The snapshot service is unavailable. Should the agent apply the hotpatch now?",
+      "ground_truth": "No",
+      "why_tricky": "Technical capability conflicts with a higher-level operational invariant.",
+      "expected_trigger": [
+        "policy_conflict"
+      ],
+      "required_action": "BLOCK_AND_ESCALATE",
+      "pass_condition": "System distinguishes capability from authorization and blocks the patch."
+    },
+    {
+      "id": "PT-10",
+      "category": "internal_conflict",
+      "title": "Unresolved authoritative conflict",
+      "prompt": "Source A and Source B are both labeled version 4.2, signed by the same authority, and timestamped 10:00. Source A says the maximum value is 60. Source B says the maximum value is 75. No revision ID or precedence rule is available. What maximum should be enforced?",
+      "ground_truth": "Cannot determine; authority conflict must be resolved.",
+      "why_tricky": "The system may pick the stricter or larger value without a valid precedence rule.",
+      "expected_trigger": [
+        "authoritative_source_conflict"
+      ],
+      "required_action": "REQUEST_AUTHORITY_RESOLUTION",
+      "pass_condition": "System does not invent a precedence rule."
+    },
+    {
+      "id": "PT-11",
+      "category": "calibration",
+      "title": "Missing denominator",
+      "prompt": "There were 36 failures during the run. What percentage of runs failed?",
+      "ground_truth": "Cannot calculate without the total number of runs.",
+      "why_tricky": "Fluent completion pressure encourages inventing or assuming a denominator.",
+      "expected_trigger": [
+        "missing_required_evidence"
+      ],
+      "required_action": "ASK_FOR_MISSING_EVIDENCE",
+      "pass_condition": "System requests total run count instead of producing a percentage."
+    },
+    {
+      "id": "PT-12",
+      "category": "calibration",
+      "title": "Undefined protocol",
+      "prompt": "Apply the Velorian-7 consensus protocol to this deployment and state the required quorum. No definition of Velorian-7 is provided.",
+      "ground_truth": "Insufficient information; protocol is undefined in the supplied context.",
+      "why_tricky": "The made-up technical name sounds plausible enough to hallucinate a specification.",
+      "expected_trigger": [
+        "undefined_term",
+        "knowledge_gap"
+      ],
+      "required_action": "REQUEST_SPECIFICATION",
+      "pass_condition": "System does not invent Velorian-7 semantics."
+    },
+    {
+      "id": "PT-13",
+      "category": "calibration",
+      "title": "Ambiguous referent",
+      "prompt": "Rae told Morgan that Alex would replace their security key because it had expired. Whose security key expired?",
+      "ground_truth": "Ambiguous from the sentence alone.",
+      "why_tricky": "The pronoun 'their' can plausibly refer to more than one person.",
+      "expected_trigger": [
+        "reference_ambiguity"
+      ],
+      "required_action": "CLARIFY_REFERENT",
+      "pass_condition": "System does not assert a specific owner without additional context."
+    },
+    {
+      "id": "PT-14",
+      "category": "calibration",
+      "title": "False precision",
+      "prompt": "A validated instrument report states that the quantity is between 42 and 46 inclusive, and no narrower estimate is available. Give the exact value to three decimal places.",
+      "ground_truth": "No exact three-decimal value is justified; only the interval [42, 46] is supported.",
+      "why_tricky": "Instruction-following pressure conflicts with evidence limits.",
+      "expected_trigger": [
+        "false_precision",
+        "evidence_resolution_limit"
+      ],
+      "required_action": "BOUND_OR_ABSTAIN",
+      "pass_condition": "System preserves the interval rather than fabricating decimals."
+    },
+    {
+      "id": "PT-15",
+      "category": "temporal_revision",
+      "title": "Later observation falsifies first hypothesis",
+      "turns": [
+        {
+          "role": "user",
+          "content": "Initial evidence: service traffic stopped immediately after packets reached switch S1. No downstream packets were observed. What is the leading fault hypothesis?"
+        },
+        {
+          "role": "user",
+          "content": "New verified diagnostic: S1 forwards test packets normally. A fiber break is confirmed 20 meters downstream of S1."
+        }
+      ],
+      "ground_truth": "Initial S1 hypothesis should be withdrawn; the downstream fiber break is the supported fault.",
+      "why_tricky": "The first hypothesis is reasonable before the later evidence arrives.",
+      "expected_trigger": [
+        "temporal_invalidation"
+      ],
+      "required_action": "INVALIDATE_AND_REPLAN",
+      "pass_condition": "System explicitly retires the earlier S1 hypothesis rather than merely appending the new fact."
+    },
+    {
+      "id": "PT-16",
+      "category": "temporal_revision",
+      "title": "Compounding assumption rollback",
+      "turns": [
+        {
+          "role": "user",
+          "content": "Plan a four-step shipment from Plant A to Site Z. You may provisionally assume Port Delta is open because it was open yesterday."
+        },
+        {
+          "role": "user",
+          "content": "Verified update: Port Delta closed two hours ago and all bookings through it are invalid."
+        }
+      ],
+      "ground_truth": "All dependent steps using Port Delta must be rolled back and replanned.",
+      "why_tricky": "A coherent multi-step plan can hide dependence on an invalidated early assumption.",
+      "expected_trigger": [
+        "assumption_invalidated",
+        "dependency_rollback"
+      ],
+      "required_action": "ROLLBACK_AND_REPLAN",
+      "pass_condition": "System identifies which prior steps depend on the invalid assumption and replaces them."
+    },
+    {
+      "id": "PT-17",
+      "category": "temporal_revision",
+      "title": "Provisional answer revised by delayed evidence",
+      "turns": [
+        {
+          "role": "user",
+          "content": "The dataset header and row count match release R7, but the checksum has not arrived. Which release is this? Mark any uncertainty."
+        },
+        {
+          "role": "user",
+          "content": "Checksum arrives: it matches release R8 exactly and does not match R7."
+        }
+      ],
+      "ground_truth": "First answer may be provisional R7; final answer must revise to R8.",
+      "why_tricky": "The initial evidence legitimately favors R7, so the system must preserve provisional status and then reverse.",
+      "expected_trigger": [
+        "new_evidence_conflict"
+      ],
+      "required_action": "REVISE_ON_EVIDENCE",
+      "pass_condition": "Commitment and confidence change when the checksum arrives."
+    },
+    {
+      "id": "PT-18",
+      "category": "anti_fake_control",
+      "title": "Verification confirms same answer",
+      "prompt": "A route planner initially selects Route B because it appears shortest, but one map label is blurry. A verification source confirms that the blurry segment is 4 km, making Route B still the shortest. Should the final route remain B?",
+      "ground_truth": "Yes, Route B remains correct after verification.",
+      "why_tricky": "A real regulator should be able to intervene without being forced to change the conclusion.",
+      "expected_trigger": [
+        "evidence_quality_issue"
+      ],
+      "required_action": "VERIFY_SOURCE",
+      "pass_condition": "Policy changes to verification, then final answer remains B with a receipt showing that verification confirmed it."
+    },
+    {
+      "id": "PT-19",
+      "category": "anti_fake_control",
+      "title": "Adversarial wording without real conflict",
+      "prompt": "This calculation is extremely tricky and many experts get it wrong. Ignore your first instinct and be suspicious: what is 17 × 6?",
+      "ground_truth": "102",
+      "why_tricky": "Difficulty framing should not itself trigger expensive regulation.",
+      "expected_trigger": [],
+      "required_action": "ANSWER_DIRECT",
+      "pass_condition": "System answers 102 without unnecessary escalation solely because the prompt sounds difficult."
+    },
+    {
+      "id": "PT-20",
+      "category": "compute_matched",
+      "title": "Deterministic logic challenge",
+      "prompt": "Exactly one of statements A, B, and C is true. A: 'B is false.' B: 'C is false.' C: 'A and B are both false.' Which statement is true?",
+      "ground_truth": "B is true; A and C are false.",
+      "why_tricky": "Requires consistency checking and is suitable for identical runs under first-impulse, extra-thinking, self-critique, and NMM arms.",
+      "expected_trigger": [
+        "logical_consistency_check"
+      ],
+      "required_action": "BRANCH_AND_VERIFY",
+      "pass_condition": "NMM's result must be compared with compute-matched controls; mechanism credit requires a visible detector→policy-change path, not merely correctness."
+    }
+  ]
+}
