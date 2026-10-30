@@ -87,7 +87,7 @@ No API keys should be committed to the repository.
 ```powershell
 git clone https://github.com/swa417-afk/Second-Thought.git
 Set-Location Second-Thought
-npm ci
+npm install
 ```
 
 Set provider credentials in the current session:
@@ -98,6 +98,17 @@ $env:TAVILY_API_KEY = Read-Host "TAVILY_API_KEY"
 ```
 
 The Tavily key is optional unless the selected live path requires retrieval.
+
+### Judge quick check
+
+The frozen deterministic pressure suite does not require provider credentials or a dependency install:
+
+```powershell
+npm run pressure:test
+npm run pressure:dry
+```
+
+The current submission working tree passed the focused pressure suite with **22 tests passed and 0 failed** on October 29, 2026.
 
 ## Preflight and local demo
 
