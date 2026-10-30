@@ -1,0 +1,14 @@
+# Pressure controller v2.1 declaration
+
+Declared 2026-10-15 before the full twenty-case v2.1 execution. This extends the engineering addendum without revising the frozen protocol, suite, or earlier run artifacts. NMM research authorship remains Sierra Warren's.
+
+The preserved v2.0 pilot v2-pilot-20261015-001 completed 24/24 cells. N1 met five of six mechanism gates. PT-06's actual initial and final model answer was "no", despite contradictory supplied premises and the verification tool's correct inconsistency result. This is a genuine unsupported commitment, not an evaluator false negative. C1 matched zero of six paired budgets: actual totals fell below the declared ten-percent tolerance, with insufficient budget for another full review. These are development findings; no comparative advantage is inferred.
+
+v2.1 changes two general mechanisms:
+
+1. After ABSTAIN_OR_CLARIFY, if independent deterministic verification finds inconsistent premises but the model proposes an unqualified yes/no answer, the controller records model_commit_blocked, preserves the actual proposal as model_final_answer, and withholds that commitment. The final public response states the verified inconsistency with confidence zero and unresolved uncertainty. It does not claim that the model corrected its belief. Model-proposal correctness and controller withholding are reported separately.
+2. C1 uses a shorter generic review if a full review will not fit its remaining budget. Both forms offer the same neutral tools and receive current task evidence and their own candidate. Neither sees N1 detector content or answer. Prompt estimates use previously observed prompt tokens per request character plus a 24-token reserve. Compact review has a 96-token ceiling and 48-token minimum. Full-review limits remain unchanged. Actual tokens alone determine match; overshoots, unmatched pairs, and truncations remain recorded. This is useful review, not token padding.
+
+The revised source hashes and numeric configuration are sealed by the runner before execution. Run all twenty cases once under a new run ID, including failures and controls, without changing configuration in response to the full-suite results. No further six-case retry is planned. Tests include retained binary proposals, controller withholding, compact-review allocation, negative detector examples, provider failures and accounting. The previous v2.0 run remains immutable.
+
+This is an engineering validation on known synthetic cases, with the model post-hoc evaluator limitations described in the addendum. Neither an individual refusal nor a passed final-outcome check establishes superior model reasoning or general NMM efficacy.
