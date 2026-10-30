@@ -1,0 +1,91 @@
+@import "tailwindcss";
+@import "./substrate.css";
+@import "./bench.css";
+@import "./lab.css";
+
+@theme {
+  --font-display: "Fraunces", Georgia, "Times New Roman", serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+  --color-ink: #14120e;
+  --color-panel: #1c1914;
+  --color-panel-2: #262218;
+  --color-line: #3a342c;
+  --color-fg: #f3ecdf;
+  --color-muted: #b7ad9e;
+  --color-amber: #e2a04a;
+  --color-oxide: #c4654a;
+  --color-paper: #efe6d6;
+  --radius-sm: 2px;
+}
+
+@layer base {
+  html {
+    --scrollbar-thumb: #828384;
+    --scrollbar-track: #090909;
+    --scrollbar-hover: #b7ad9e;
+    --scrollbar-active: #f3ecdf;
+    scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+    scrollbar-width: auto;
+    scrollbar-gutter: stable;
+    color-scheme: dark;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    background: var(--color-ink);
+    color: var(--color-fg);
+    font-family: var(--font-mono);
+  }
+
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+
+  button:focus-visible,
+  a:focus-visible {
+    outline: 2px solid var(--color-amber);
+    outline-offset: 2px;
+  }
+
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  * {
+    scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+  }
+
+  ::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--scrollbar-track);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb);
+    border: 3px solid var(--scrollbar-track);
+    border-radius: 8px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--scrollbar-hover);
+  }
+  ::-webkit-scrollbar-thumb:active {
+    background: var(--scrollbar-active);
+  }
+
+  @media (forced-colors: active) {
+    html,
+    * {
+      scrollbar-color: auto;
+    }
+  }
+}
