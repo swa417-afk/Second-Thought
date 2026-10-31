@@ -176,3 +176,13 @@ The project is designed to make bounded control interventions and their evidence
 MIT License. See `LICENSE`.
 
 Copyright (c) 2026 Sierra Warren.
+
+## Research authorship and public record
+
+Second Thought was created and developed by **Sierra N. Warren** as an implemented, bounded agent-control research prototype. It is one part of a wider but distinct body of research; it does **not** establish the full human-state-dependent NMM architecture.
+
+- [Dated public research and evidence record (31 October 2026)](docs/research/SIERRA_WARREN_RESEARCH_PUBLIC_RECORD_2026-10-31.md)
+- [Sierra Warren Research: public identity and research areas](docs/research/SIERRA_WARREN_RESEARCH_BRAND.md)
+- [NMM original archival record (Zenodo, 18 May 2026)](https://doi.org/10.5281/zenodo.20263924)
+
+The record distinguishes author claims, independently available archives, local engineering evidence, and work still requiring empirical validation or external replication.
